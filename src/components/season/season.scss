@@ -1,0 +1,98 @@
+@use "../../scss/" as *;
+
+.season {
+    background: rgba($color: #333333, $alpha: 0.6);
+    padding: 1rem;
+    border-radius: 0.5rem;
+
+    .option {
+        position: relative;
+        &-choose {
+            @include flex(center, flex-start);
+            cursor: pointer;
+        }
+        
+        &-text {
+            margin: 0 0.4rem;
+        }
+
+        &-list {
+            position: absolute;
+            max-height: 7.5rem;
+            overflow-y: scroll;
+            background: $white;
+            color: $black;
+            border-radius: 0.5rem;
+            animation: dropdown 300ms ease-in-out;
+            transform-origin: top;
+            &::-webkit-scrollbar {
+                width: 5px;
+            }
+    
+            &::-webkit-scrollbar-thumb {
+                background-color: grey;
+                border-radius: 8px;
+            }
+    
+            &-item {
+                padding: 0.5rem 1.5rem;
+                transition: background-color 0.5s ease-out;
+    
+                &:hover {
+                    cursor: pointer;
+                    background-color: rgba(100, 100, 111, 0.5);
+                }
+            }
+        }
+    }
+
+    .tv-episodes-wrap {
+        display: none;
+        
+        &.active {
+                display: block;
+        }
+    }
+    
+}
+
+.tv-episodes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.5rem;
+    max-height: 28rem;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: grey;
+        border-radius: 8px;
+    }
+    
+    .tv-episode {
+        font-size: 14px;
+        background: #333333;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; 
+        transition: background-color 0.2s linear;
+
+        @include tablet{
+            font-size: 12px;
+        }
+
+        @include mobile{
+            font-size: 10px;
+        }
+
+        &:hover {
+            cursor: pointer;
+            background-color: rgba(100, 100, 111, 0.5);
+        }
+    }
+}

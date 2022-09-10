@@ -1,0 +1,83 @@
+@use "../../scss/" as *;
+
+.play-wrap {
+    position: relative;
+    margin-top: -200px;
+    @include flex(flex-start, flex-start);
+    
+    @include tablet {
+        margin-top: -240px;
+    }
+
+    @include mobile {
+        margin-top: -260px;
+    }
+}
+
+.play-content {
+    @include flex(flex-start, flex-start);
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+
+    &__poster {
+        flex: 1;
+
+        @include mobile {
+            display: none;
+        }
+
+        &__img {
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-radius: 1rem;
+            padding-top: 170%;
+        }
+    }
+
+    &__info {
+        width: 85%;
+        padding-left: 2rem;
+        position: relative;
+
+        @include mobile {
+            width: 100%;
+            padding-left: 0;
+        }
+
+        & > * {
+            margin-bottom: 1rem;
+        }
+
+        .title {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .genres {
+            & > * ~ * {
+                margin-left: 0.3rem;
+            }
+
+            &__item {
+                padding: 0.3rem 1rem;
+                border: 2px solid $white;
+                border-radius: $border-radius;
+                font-size: 0.8rem;
+                font-weight: 600;
+                background-color: transparent;
+            }
+        }
+
+        span, .release, .overview {
+            font-size: 0.9rem;
+        }
+    }
+}
+
+.sidebar-right {
+    @media only screen and (max-width: 1075px) {
+        display: none;
+    }
+}

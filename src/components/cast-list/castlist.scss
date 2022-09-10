@@ -1,0 +1,43 @@
+@use "../../scss/" as *;
+
+.casts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 20px;
+
+    @include mobile {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 10px;
+    }
+    
+    &__item {
+        cursor: pointer;
+        &:hover .casts__item__img::before {
+            background-color: rgba(#000000, 0);
+        }
+
+        &__img {
+            position: relative;
+            padding-top: 150%;
+            background-size: cover;
+            margin-bottom: 0.5rem;
+            border-radius: 1rem;
+            
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;            
+                border-radius: 1rem;
+                background-color: rgba(#000000, 0.4);
+                transition: background-color 0.3s ease;
+            }
+        }
+
+        &__name {
+            font-size: 0.8rem;
+        }        
+    }
+}

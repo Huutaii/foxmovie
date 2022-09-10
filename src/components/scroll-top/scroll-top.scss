@@ -1,0 +1,23 @@
+@use "../../scss/" as *;
+
+.scroll-top-btn {
+    z-index: 1;
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    padding: 0.8rem 1rem;
+    background-color: #C85A17;
+    border-radius: 0.5rem;
+    opacity: 0.8;
+    transition: all 0.2s linear;
+    
+    @include mobile {
+        bottom: 80px;
+        right: 30px;
+    }
+
+    &:hover {
+        cursor: pointer;
+        opacity: 1;
+    }
+}

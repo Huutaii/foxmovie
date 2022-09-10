@@ -1,0 +1,9 @@
+@use "../../scss/" as *;
+
+.video-iframe {
+    height: 40vw;
+
+    @media only screen and (max-width: 1075px) {
+        height: 50vw;
+    }
+}

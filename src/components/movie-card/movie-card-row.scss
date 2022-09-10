@@ -1,0 +1,51 @@
+@use "../../scss/" as *;
+
+.movie-card-row {
+    position: relative;
+
+    .btn {
+        position: absolute;
+        top: 60%;
+        left: 10%;
+        transform: scale(0);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    &-img {
+        background-position: top;
+        background-repeat: no-repeat;
+        background-size: cover;
+        padding-top: 12rem;
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+        transition: transform 0.3s ease;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;            
+            border-radius: 1rem;
+            @include overlay();
+        }
+    }
+
+    &-content {
+        position: absolute;
+        top: 0;
+        margin: 1rem 0;
+        font-size: 100%;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+    }
+    
+    &:hover .btn {
+        transform: scale(1);
+    }
+
+    &:hover .movie-card-row-content {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,130 @@
+@use "../../scss/" as *;
+
+.discover {
+    @include flex(flex-start, space-between);
+}
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 3rem;
+
+    @include tablet {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    
+    @include mobile {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
+    &__loadmore {
+        text-align: center;
+    }
+}
+
+.movie-search {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+
+    input {
+        width: 100%;
+        padding-right: 8rem;
+
+        @include mobile {
+            margin-top: 1.6px;
+        }
+    }
+
+    button {
+        position: absolute;
+        right: 2px;
+        top: 2px;
+    }
+}
+
+.filter {
+    display: flex;
+
+    &-genres {
+        position: relative;
+        
+        margin-left: 1rem;
+
+        @include tablet {
+            margin-top: 0.2rem;
+        }
+
+        @include mobile {
+            margin-top: 0.4rem;
+        }
+    }
+
+    &-year {
+        position: relative;
+        
+        margin-left: 1rem;
+
+        @include tablet {
+            margin-top: 0.2rem;
+        }
+
+        @include mobile {
+            margin-top: 0.4rem;
+        }
+    }
+
+    &__choose {
+        @include flex(center, space-between);
+        padding: 0.25rem 1.5rem;
+        background-color: $white;
+        color: $black;
+        border-radius: $border-radius;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    &__text {
+        margin-right: 0.5rem;
+    }
+
+    &__option {
+        z-index: 1;
+        position: absolute;
+        top: 3rem;
+        right: 0;
+        display: none;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        width: 55vw;
+        padding: 0.25rem 0;
+        background-color: $white;
+        color: $black;
+        border-radius: 1rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        animation: dropdown 300ms ease-in-out forwards;       
+
+        @include tablet {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+
+        @include mobile {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
+
+        &.active {
+            display: grid;
+        }
+    }
+
+    &__item {
+        margin-left: 3rem;
+
+        &__name {
+            &:hover {
+                color: $main-color;
+                cursor: pointer;
+            }
+        }
+    }
+}

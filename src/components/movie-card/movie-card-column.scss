@@ -1,0 +1,58 @@
+@use "../../scss/" as *;
+
+.movie-card-column {
+    &-wrap {
+        @include flex(center, flex-start);
+        background: rgba($color: #333333, $alpha: 0.6);
+        padding: 0.5rem;
+        height: 7.5vw;
+        border-radius: 0.5rem;
+
+        &:hover .movie-card-column-img::before {
+            opacity: 0;
+        }
+
+        &:hover .movie-card-column-info {
+            opacity: 1;
+        }
+    }
+
+    &-img {
+        flex: 1;
+        position: relative;
+        background-position: top;
+        background-repeat: no-repeat;
+        background-size: cover;
+        padding-top: 30%;
+        border-radius: 0.5rem;
+    
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-color: $black;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            border-radius: 0.5rem;
+        }
+    }
+
+    &-info {
+        width: 80%;
+        opacity: 0.6;
+        padding-left: 1rem;
+        
+        h4 {
+            @media only screen and (max-width: 1250px) {
+                font-size: 13px;
+            }
+        }
+
+        span {
+            font-size: 0.8rem;
+        }
+    }
+}
