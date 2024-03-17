@@ -74,12 +74,14 @@ const Play = () => {
                                 </div>
                             </div>
                         </div>    
-                        <div className="section mb-2">
-                            <div className="section__header mb-2">
-                                <h2>Similar</h2>
-                            </div>
-                            <MovieListRow category={category} type="similar" id={item.id}/>
-                        </div> 
+                        <div className="container">
+                            <div className="section mb-2">
+                                <div className="section__header mb-2">
+                                    <h2>Similar</h2>
+                                </div>
+                                <MovieListRow category={category} type="similar" id={item.id}/>
+                            </div> 
+                        </div>
                     </>
                 )
             }
