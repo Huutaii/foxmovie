@@ -1,0 +1,82 @@
+.info {
+    &__backdrop {
+        aspect-ratio: 15/5;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        border-radius: 32px 32px 0 0;
+        position: relative;
+        &::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to top, #F5F5F5, transparent);
+        }
+    }
+    &__wrapper {
+        position: relative;
+        &--poster {
+            flex-shrink: 0;
+            img {
+                aspect-ratio: 5/7;
+                width: 248px;
+                height: auto;
+                border-radius: 32px;
+            }
+        }
+        &--btn {
+            margin-top: 24px;
+            :where(.css-dev-only-do-not-override-djtmh8).ant-btn-default {
+                background: transparent;
+                &:not(:disabled):not(.ant-btn-disabled):hover {
+                    color: $primary;
+                    border-color: $primary;
+                    background: transparent;
+                }
+            }
+        }
+        &--overview {
+            margin-top: 24px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 300;
+        }
+        &--genre {
+            margin-top: 24px;
+            .swiper {
+                margin-left: unset;
+                margin-right: unset;
+                &-slide {
+                    padding: 2px 14px;
+                    width: auto;
+                    font-weight: 300;
+                    border: 1px solid rgba(0, 0, 0, 0.88);
+                    border-radius: 24px;
+                }
+            }
+        }
+    }
+}
+
+.stars {
+    --star-size: 16px;
+    --star-color: #DEDFE0;
+    --star-background: #F5B800;
+    --percent: calc(var(--rating) / 10 * 100%);
+    
+    display: inline-block;
+    font-size: var(--star-size);
+    font-family: Times; // make sure ★ appears correctly
+    line-height: 1;
+    
+    &::before {
+      content: '★★★★★';
+      letter-spacing: 3px;
+      background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+}

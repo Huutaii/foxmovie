@@ -1,0 +1,92 @@
+.details {
+    overflow: hidden;
+
+    .ant-skeleton-image {
+        aspect-ratio: 5/7;
+        width: 248px !important;
+        height: auto !important;
+        border-radius: 32px !important;
+        &-poster {
+            width: 248px !important;
+        }
+        &-casts {
+            width: 92px !important;
+            border-radius: 16px !important;
+        }
+        &-video {
+            aspect-ratio: 16/9;
+            width: 100% !important;
+        }
+    }
+
+    &__wrapper {
+        padding: 0 48px;
+        .info {
+            &__wrapper {
+                margin-top: -174px;
+                &--poster {
+                    flex-shrink: 0;
+                    position: relative;
+                    &:hover {
+                        &::before {
+                            background: rgba(0, 0, 0, 0.45);
+                        }
+                        .anticon {
+                            opacity: 1;
+                        }
+                    }
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: calc(100% - 6px);
+                        background: rgba(0, 0, 0, 0);
+                        border-radius: 32px;
+                        transition: all 0.35s ease;
+                    }
+                    .anticon {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%,-50%);
+                        font-size: 48px;
+                        opacity: 0;
+                        transition: all 0.35s ease;
+                    }
+                }
+            }
+        }
+        &--casts {
+            margin-top: 24px;
+            &--item {
+                display: block;
+                width: 124px;
+                img, .ant-avatar {
+                    aspect-ratio: 5/7;
+                    width: 100%;
+                    height: auto;
+                    object-position: top;
+                    border-radius: 16px;
+                }
+                &--name, &--character {
+                    @include line-clamp(1);
+                }
+                &--character {
+                    font-weight: 300;
+                }
+            }
+            .swiper-slide {
+                width: auto;
+            }
+        }
+        &--trailer {
+            margin-top: 24px;
+            iframe {
+                aspect-ratio: 16/9;
+                width: 100%;
+            }
+        }
+    }
+}

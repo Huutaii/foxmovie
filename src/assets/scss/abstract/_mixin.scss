@@ -1,0 +1,122 @@
+$width-1920: 1920px;
+$width-1600: 1600px;
+$width-1400: 1400px;
+$width-1200: 1200px;
+$width-992: 992px;
+$width-768: 768px;
+$width-576: 576px;
+
+@mixin min-width-576 {
+    @media (min-width: #{$width-576}) {
+        @content;
+    }
+}
+
+@mixin min-width-768 {
+    @media (min-width: #{$width-768}) {
+        @content;
+    }
+}
+
+@mixin min-width-992 {
+    @media (min-width: #{$width-992}) {
+        @content;
+    }
+}
+
+@mixin min-width-1200 {
+    @media (min-width: #{$width-1200}) {
+        @content;
+    }
+}
+
+@mixin min-width-1400 {
+    @media (min-width: #{$width-1400}) {
+        @content;
+    }
+}
+
+@mixin min-width-1600 {
+    @media (min-width: #{$width-1600}) {
+        @content;
+    }
+}
+
+@mixin min-width-1920 {
+    @media (min-width: #{$width-1920}) {
+        @content;
+    }
+}
+
+@mixin max-width-1920 {
+    @media (max-width: #{$width-1920 - 1px}) {
+        @content;
+    }
+}
+
+@mixin max-width-1600 {
+    @media (max-width: #{$width-1600 - 1px}) {
+        @content;
+    }
+}
+
+@mixin max-width-1400 {
+    @media (max-width: #{$width-1400 - 1px}) {
+        @content;
+    }
+}
+
+@mixin max-width-1200 {
+    @media (max-width: #{$width-1200 - 1px}) {
+        @content;
+    }
+}
+
+@mixin max-width-992 {
+    @media (max-width: #{$width-992 - 1px}) {
+        @content;
+    }
+}
+
+@mixin max-width-768 {
+    @media (max-width: #{$width-768 - 1px}) {
+        @content;
+    }
+}
+
+@mixin max-width-576 {
+    @media (max-width: #{$width-576 - 1px}) {
+        @content;
+    }
+}
+
+@mixin line-clamp($number: 2) {
+    display: -webkit-box !important;
+    -webkit-line-clamp: $number;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+
+@mixin flex($aligin-item, $justify-content) {
+    display: flex;
+    align-items: $aligin-item;
+    justify-content: $justify-content;
+}
+
+@mixin overlay {
+    background-color: rgba($color: #000000, $alpha: 0.6);
+}
+
+@mixin mobile {
+    @media only screen and (max-width: 600px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media only screen and (max-width: 1024px) {
+        @content;
+    }
+}

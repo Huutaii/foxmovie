@@ -1,0 +1,43 @@
+.video {
+    &-iframe {
+        aspect-ratio: 16/9;
+        border-radius: 32px;
+    }
+    &-btn {
+        position: absolute;
+        top: 40px;
+        right: 12px;
+        padding: 10px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        aspect-ratio: 1;
+        height: auto;
+        .anticon {
+            font-size: 28px;
+        }
+    }
+}
+
+.ant-drawer-content-wrapper:has(.video-drawer-episode) {
+    box-shadow: none;
+    .video-drawer-episode {
+        margin: 0 auto;
+        border-radius: 32px 32px 0 0;
+        @include min-width-992 {
+            max-width: calc(960px - 64px);
+        }
+        @include min-width-1200 {
+            max-width: calc(1140px - 64px);
+        }
+        @include min-width-1400 {
+            max-width: calc(1320px - 64px);
+        }
+        @include min-width-1600 {
+            max-width: calc(1540px - 64px);
+        }
+        @include min-width-1920 {
+            max-width: calc(1780px - 64px);
+        }
+    }
+}

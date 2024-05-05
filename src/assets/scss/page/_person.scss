@@ -1,0 +1,11 @@
+.person {
+    &-poster {
+        aspect-ratio: 5/7;
+        width: 348px !important;
+        height: auto !important;
+        border-radius: 32px !important;
+    }
+    &-movies {
+        margin-top: 48px;
+    }
+}

@@ -4,8 +4,9 @@ import { Routes, Route } from 'react-router-dom';
 
 import Home from '../pages/Home';
 import Catalog from '../pages/Catalog';
-import Detail from '../pages/detail/Detail';
-import Play from '../pages/play/Play';
+import Detail from '../pages/Detail';
+import Play from '../pages/Play';
+import Person from '../pages/Person';
 
 function Containers() {
     return (
@@ -16,22 +17,6 @@ function Containers() {
                 element={<Home />}
             />
             <Route
-                path='/:category/search/:keyword'
-                element={<Catalog />}
-            />
-            <Route
-                path='/:category/genre/:genrecode'
-                element={<Catalog />}
-            />
-            <Route
-                path='/:category/year/:year'
-                element={<Catalog />}
-            />
-            <Route
-                path='/:category/cast/:castid'
-                element={<Catalog />}
-            />
-            <Route
                 path='/:category/:id/play'
                 element={<Play />}
             />
@@ -39,6 +24,10 @@ function Containers() {
                 path='/:category/:id'
                 element={<Detail />}
             />            
+            <Route
+                path='/person/:id'
+                element={<Person />}
+            />
             <Route
                 path='/:category'
                 element={<Catalog />}

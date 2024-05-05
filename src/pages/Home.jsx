@@ -1,60 +1,104 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { FreeMode } from 'swiper';
+import { Flex } from 'antd';
 
-import { OutlineButton } from '../components/button/Button';
-import HeroSlide from "../components/hero-slide/HeroSlide";
-import MovieListRow from '../components/movie-list/MovieListRow';
+import { useGetMoviesQuery } from '../services/tmdb'
+import apiConfig from '../api/apiConfig';
 
-import { category, movieType, tvType } from '../api/tmdbApi';
+import HeroSlide from "../components/HeroSlide";
+
+import imdbImage from '../assets/imgs/imdb.jpeg';
 
 function Home() {
+    const { data: moviePopularData, error: moviePopularError, isFetching: isFetchingMoviePopular } = useGetMoviesQuery({category: 'movie', type: 'popular'})
+    const { data: tvAiringTodayData, error: tvAiringTodayError, isFetching: isFetchingTvAiringToday } = useGetMoviesQuery({category: 'tv', type: 'airing_today'})
+    const { data: trendingData, error: trendingError, isFetching: isFetchingTrending } = useGetMoviesQuery({category: 'trending', time: 'week'})
+
     window.scrollTo(0,0);
 
     return (
-        <>
-            <HeroSlide/>
-            <div className="container">
-                <div className="section mb-3">
-                    <div className="section__header mb-2">
-                        <h2>Popular Movies</h2>
-                        <Link to="/movie">
-                            <OutlineButton className="small">View more</OutlineButton>
-                        </Link>
-                    </div>
-                    <MovieListRow category={category.movie} type={movieType.popular}/>
-                </div>
+        <Flex vertical={true} gap="large" className="home">
+            <HeroSlide />
 
-                <div className="section mb-3">
-                    <div className="section__header mb-2">
-                        <h2>Top rated Movies</h2>
-                        <Link to="/movie">
-                            <OutlineButton className="small">View more</OutlineButton>
-                        </Link>
-                    </div>
-                    <MovieListRow category={category.movie} type={movieType.top_rated}/>
-                </div>
-
-                <div className="section mb-3">
-                    <div className="section__header mb-2">
-                        <h2>Popular TV</h2>
-                        <Link to="/tv">
-                            <OutlineButton className="small">View more</OutlineButton>
-                        </Link>
-                    </div>
-                    <MovieListRow category={category.tv} type={tvType.popular}/>
-                </div>
-
-                <div className="section mb-3">
-                    <div className="section__header mb-2">
-                        <h2>On the air TV</h2>
-                        <Link to="/tv">
-                            <OutlineButton className="small">View more</OutlineButton>
-                        </Link>
-                    </div>
-                    <MovieListRow category={category.tv} type={tvType.on_the_air}/>
-                </div>
+            <div>
+                <p className="swiper-title">Popular Movie</p>
+                <Swiper
+                    slidesPerView={'auto'}
+                    spaceBetween={16}
+                    freeMode={true}
+                    modules={[FreeMode]}
+                    grabCursor={true}
+                    className="listSwiper"
+                >
+                        {
+                            !isFetchingMoviePopular && moviePopularData.results.map((item, i) => (
+                                <SwiperSlide key={i}>
+                                    <Link to={`/movie/${item.id}`} style={{ color: "unset" }}>
+                                        <img className="poster" src={`${apiConfig.originalImage(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
+                                        <h3>{item.original_title && item.original_title}</h3>
+                                        <Flex align="center" gap="small" wrap="wrap">
+                                            <img src={imdbImage} alt="" style={{ width: "16px", height: "16px" }}/>
+                                            <span style={{ fontWeight: "200" }}> {item.vote_average.toFixed(1)}</span>
+                                        </Flex>
+                                    </Link>
+                                </SwiperSlide>
+                            ))
+                        }
+                </Swiper>
             </div>
-        </>
+
+            <div>
+                <p className="swiper-title">Airing Today</p>
+                <Swiper
+                    slidesPerView={'auto'}
+                    spaceBetween={16}
+                    freeMode={true}
+                    modules={[FreeMode]}
+                    grabCursor={true}
+                    className="listSwiper"
+                >
+                        {
+                            !isFetchingTvAiringToday && tvAiringTodayData.results.map((item, i) => (
+                                <SwiperSlide key={i}>
+                                    <Link to={`/tv/${item.id}`} style={{ color: "unset" }}>
+                                        <img className="poster" src={`${apiConfig.originalImage(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
+                                        <h3>{item.original_name && item.original_name}</h3>
+                                        <Flex align="center" gap="small" wrap="wrap">
+                                            <img src={imdbImage} alt="" style={{ width: "16px", height: "16px" }}/>
+                                            <span style={{ fontWeight: "200" }}> {item.vote_average.toFixed(1)}</span>
+                                        </Flex>
+                                    </Link>
+                                </SwiperSlide>
+                            ))
+                        }
+                </Swiper>
+            </div>
+
+            <div>
+                <p className="swiper-title">Top 10 Movies & TV in Today</p>
+                <Swiper
+                    slidesPerView={'auto'}
+                    spaceBetween={48}
+                    freeMode={true}
+                    modules={[FreeMode]}
+                    grabCursor={true}
+                    className="trendingSwiper"
+                >
+                        {
+                            !isFetchingTrending && trendingData.results.slice(0, 10).map((item, i) => (
+                                <SwiperSlide key={i}>
+                                    <span>{i+1}</span>
+                                    <Link to={`/${item.media_type}/${item.id}`}>
+                                        <img src={`${apiConfig.originalImage(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
+                                    </Link>
+                                </SwiperSlide>
+                            ))
+                        }
+                </Swiper>
+            </div>
+        </Flex>
     )
 }
 
