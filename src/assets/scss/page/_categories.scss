@@ -11,6 +11,10 @@
         border-radius: 32px;
         overflow: hidden;
         position: relative;
+        @include max-width-768 {
+            aspect-ratio: 16/9;
+            border-radius: 24px;
+        }
         &::before {
             content: "";
             position: absolute;
@@ -42,17 +46,31 @@
     }
     &__list {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(204px, 1fr));
+        grid-template-columns: repeat(5, 1fr);
         gap: 16px;
+        @include max-width-1400 {
+            gap: 14px;
+        }
+        @include max-width-1200 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        @include max-width-768 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include max-width-576 {
+            grid-template-columns: repeat(1, 1fr);
+        }
         .ant-skeleton-image, .categories__item {
             aspect-ratio: 5/7;
             width: auto !important;
             height: auto !important;
             border-radius: 32px !important;
+            @include max-width-1400 {
+                border-radius: 24px !important;
+            }
         }
         .categories__item {
             color: unset;
-            border-radius: 32px;
             overflow: hidden;
             position: relative;
             &:hover {
@@ -79,7 +97,7 @@
                 font-size: 20px;
                 line-height: 24px;
                 font-weight: 500;
-                background-image: linear-gradient(to top, #F5F5F5, transparent);
+                background-image: linear-gradient(to top, var(--bg-theme), transparent);
                 transition: all 0.35s ease;
             }
         }

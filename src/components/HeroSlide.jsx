@@ -69,14 +69,14 @@ function HeroSlide() {
                                     <p>{item.overview}</p>
                                 </div>
                                 <Flex gap="small" wrap="wrap">
-                                    <Button type="primary" shape="round" size="large" style={{ background: "#FF8D1B"}}
+                                    <Button type="primary" shape="round" size="large"
                                         onClick={() => {
                                             setIdItem(item.id)
                                             setIsModalOpen(true);
                                     }}>
                                             Watch trailer
                                     </Button>
-                                    <Button ghost shape="round" icon={<PlusOutlined />} size="large" style={{ borderColor: "#FF8D1B"}}>
+                                    <Button ghost shape="round" icon={<PlusOutlined />} size="large">
                                         Watchlist
                                     </Button>
                                 </Flex>

@@ -3,9 +3,10 @@ import "swiper/css/navigation";
 
 import "./App.scss";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Layout, Menu, Avatar, Input, Button } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { ConfigProvider, Flex, Layout, Menu, Avatar, Input, Button, Switch, Checkbox, notification } from "antd";
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
@@ -17,9 +18,15 @@ import {
     HeartOutlined,
     DesktopOutlined,
     PlaySquareOutlined,
+    SunFilled,
+    MoonFilled,
+    LogoutOutlined
 } from "@ant-design/icons";
 
+import apiConfig from './api/apiConfig';
 import Containers from "./config/Routes";
+import { setUser, logOut, userSelector } from "./features/authSlice";
+import { fetchToken, createSessionId, deleteSession, axiosClient } from "./utils";
 
 import logo from './assets/imgs/logo.png';
 const { Header, Sider, Content } = Layout;
@@ -62,101 +69,227 @@ const items = [
 function App() {
     let navigate = useNavigate();
     const location = useLocation();
+    
+    const { isAuthenticated, user } = useSelector(userSelector);
+    const dispatch = useDispatch();
+    
+    const token = localStorage.getItem('request_token');
+    const sessionIdFromLocalStorage = localStorage.getItem('session_id');
+    useEffect(() => {
+        const loginUser = async () => {
+            if(token) {
+                if(sessionIdFromLocalStorage) {
+                    const { data: userData } = await axiosClient.get(`account?session_id=${sessionIdFromLocalStorage}`)
+                    dispatch(setUser(userData))
+                } else {
+                    const sessionId = await createSessionId();
+                    const { data: userData } = await axiosClient.get(`account?session_id=${sessionId}`)
+                    dispatch(setUser(userData))
+                }
+            }
+        }
+        loginUser();
+    }, [token])
 
-    const [collapsed, setCollapsed] = useState(false);
+    const [theme, setTheme] = useState(localStorage.getItem("theme") ? localStorage.getItem("theme") : "system");
+    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    function onWindowMatch() {
+        if ( localStorage.theme === 'dark' || (!('theme' in localStorage) && darkQuery.matches)) {
+            document.body.setAttribute('data-theme', 'dark');
+        } else {
+            document.body.removeAttribute('data-theme');
+        }
+    }
+    onWindowMatch();
 
+    useEffect(() => {
+        switch(theme) {
+            case "light":
+                localStorage.setItem('theme', 'light');
+                document.body.removeAttribute('data-theme');
+                break;
+            case "dark":
+                localStorage.setItem('theme', 'dark');
+                document.body.setAttribute('data-theme', 'dark');
+                break;
+            default:
+                localStorage.removeItem('theme');
+                onWindowMatch();
+                break;
+        }
+    }, [theme])
+
+    darkQuery.addEventListener("change", (e) => {
+        if(!('theme' in localStorage)) {
+            if(e.matches) {
+                document.body.setAttribute('data-theme', 'dark');
+            } else {
+                document.body.removeAttribute('data-theme');
+            }
+        }
+    })
+    
+    const [api, contextHolder] = notification.useNotification();
+    const openNotification = (placement) => {
+        api.error({
+          message: 'Unauthorized Access',
+          description:
+            'Please log in to proceed.',
+          placement,
+        });
+    };
+    
     return (
-        <div className="container">
-            <Layout>
-                <Sider 
-                    trigger={null} collapsible collapsed={collapsed}
-                    style={{
-                        overflow: "auto",
-                        height: "100vh",
-                        position: "sticky",
-                        top: 0,
-                        left: 0,
-                        padding: "24px 0",
-                        background: "transparent"
-                    }}
-                >
-                    <Link to="/">
-                        <img src={logo} alt="" style={{ padding: "0 16px", }}/>
-                    </Link>
-                    <Menu
+        <ConfigProvider
+            theme={ (theme === 'dark' || (!('theme' in localStorage) && darkQuery.matches)) ? {
+                token: {
+                    colorPrimary: "#f59445",
+                    colorText: "#FFFFFF",
+                    colorTextTertiary: "rgba(255, 255, 255, 0.45)",
+                    colorLinkHover: "#f59445",
+                },
+                components: {
+                    Button: {
+                        defaultGhostColor: "#FFFFFF",
+                        defaultGhostBorderColor: "#FFFFFF"
+                    },
+                    Notification: {
+                        colorTextHeading: "rgba(0, 0, 0, 0.88)",
+                        colorText: "rgba(0, 0, 0, 0.88)",
+                    }
+                }
+            } : {
+                token: {
+                    colorPrimary: "#f59445",
+                    colorLinkHover: "#f59445",
+                },
+                components: {
+                    Button: {
+                        defaultGhostColor: "rgba(0, 0, 0, 0.88)",
+                        defaultGhostBorderColor: "rgba(0, 0, 0, 0.88)"
+                    },
+                }
+            }}
+        >
+            {contextHolder}
+            <div className="container">
+                <Layout>
+                    <Sider 
+                        breakpoint="lg"
+                        
                         style={{
-                            borderInlineEnd: 0,
-                            background: "transparent",
-                        }}
-                        mode="inline"
-                        defaultSelectedKeys={[location.pathname.split('/').pop()]}
-                        items={items}
-                        onClick={({ key }) => navigate(`/${key}`)}
-                    />
-                </Sider>
-                <Layout style={{ padding: "24px" }}>
-                    <Header
-                        style={{
-                            padding: "0",
-                            display: "flex",
-                            alignItems: "center",
-                            columnGap: "12px",
-                            height: "auto",
-                            background: "transparent",
+                            overflow: "auto",
+                            height: "100vh",
+                            position: "sticky",
+                            top: 0,
+                            left: 0,
+                            padding: "24px 0",
+                            background: "transparent"
                         }}
                     >
-                        <Button
-                            type="text"
-                            icon={
-                                collapsed ? (
-                                    <MenuUnfoldOutlined />
-                                ) : (
-                                    <MenuFoldOutlined />
-                                )
-                            }
-                            onClick={() => setCollapsed(!collapsed)}
+                        <Flex vertical className="h-full">
+                            <Link to="/">
+                                <img src={logo} alt="logo"/>
+                            </Link>
+                            <Menu
+                                style={{
+                                    borderInlineEnd: 0,
+                                    background: "transparent",
+                                }}
+                                mode="inline"
+                                defaultSelectedKeys={[location.pathname.split('/').pop()]}
+                                items={items}
+                                onClick={({ key }) => (['favorite', 'watchlist'].includes(key) && !isAuthenticated) ? openNotification('bottomRight') : navigate(`/${key}`)}
+                            />
+                            <div className="mt-auto">
+                                { isAuthenticated &&
+                                    <Button type="text" icon={<LogoutOutlined />} className="btn-logout"
+                                        onClick={() => {
+                                            deleteSession()
+                                            dispatch(logOut())}
+                                        }
+                                    >
+                                        <span className="btn-logout-title">Log out</span>
+                                    </Button>
+                                }
+                            </div>
+                        </Flex>
+                    </Sider>
+                    <Layout className="ant-layout-main">
+                        <Header
                             style={{
-                                width: "48px",
-                                height: "48px",
-                                fontSize: "16px",
-                                background: "white",
-                            }}
-                        />
-                        <Input size="large" placeholder="Search..." prefix={<SearchOutlined />}
-                            style={{
-                                minWidth: "240px",
-                                width: "50%",
-                                height: "48px",
-                                borderRadius: "48px",
-                                border: "none"
-                            }}
-                            onPressEnter={(e) => navigate(`/search?query=${e.target.value}`)}
-                        />
-                        <div
-                            style={{
-                                marginLeft: "auto",
-                                display: "flex",
-                                alignItems: "center",
-                                columnGap: "4px"
+                                padding: "0",
+                                height: "auto",
+                                background: "transparent",
                             }}
                         >
-                            <Avatar size={48} icon={<UserOutlined />} />
-                            <div>
-                                <p style={{ fontSize: "14px", lineHeight: "18px" }}>User</p>
-                                <p style={{ fontSize: "12px", lineHeight: "16px", color: "#B9BABF" }}>@user</p>
-                            </div>
-                        </div>
-                    </Header>
-                    <Content
-                        style={{
-                            paddingTop: 24,
-                        }}
-                    >
-                        <Containers />
-                    </Content>
+                            <Flex justify="space-between" align="end" gap="large" flex={1}>
+                                <Flex align="center" gap="small" onClick={() => !isAuthenticated && fetchToken()}>
+                                    { Object.keys(user).length > 0 ? (
+                                            <>
+                                                <Avatar size={48} src={`${apiConfig.w500Image(user?.avatar?.tmdb?.avatar_path)}`}>{user?.name}</Avatar>
+                                                <div>
+                                                    <p style={{ fontSize: "14px", lineHeight: "18px" }}>{ user?.name }</p>
+                                                    <p style={{ fontSize: "12px", lineHeight: "16px", color: "#B9BABF" }}>{`@${user?.username}`}</p>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Avatar size={48} icon={<UserOutlined />} />
+                                                <p style={{ fontSize: "14px", lineHeight: "18px" }}>Login</p>
+                                            </>
+                                        )
+                                    }
+                                </Flex>
+                                <Flex vertical={true} justify="space-between" align="flex-end" gap={2}>
+                                    <Switch
+                                        size="small"
+                                        checkedChildren={<SunFilled />}
+                                        unCheckedChildren={<MoonFilled />}
+                                        checked={theme === 'light' ? true : false}
+                                        disabled={theme === "system" && true}
+                                        onChange={(e) => e ? setTheme('light') : setTheme('dark')}
+                                    />
+                                    <Checkbox defaultChecked={theme === "system" ? true : false} onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setTheme('system')
+                                            localStorage.removeItem('theme');
+                                        } else {
+                                            setTheme(darkQuery.matches ? 'dark' : 'light');
+                                            localStorage.setItem('theme', theme);
+                                        }
+                                    }}>
+                                        System
+                                    </Checkbox>
+                                </Flex>
+                            </Flex>
+                            <Flex align="end" gap="middle" className="btn-search">
+                                <ConfigProvider
+                                    theme={{
+                                        inherit: true,
+                                        token: {
+                                            colorText: "rgba(0, 0, 0, 0.88)",
+                                            colorTextTertiary: "rgba(255, 255, 255, 0.45)",
+                                        },
+                                    }}
+                                >
+                                    <Input size="large" placeholder="Search..." prefix={<SearchOutlined />}
+                                        onPressEnter={(e) => navigate(`/search?query=${e.target.value}`)}
+                                    />
+                                </ConfigProvider>
+                            </Flex>
+                        </Header>
+                        <Content
+                            style={{
+                                paddingTop: 24,
+                            }}
+                        >
+                            <Containers />
+                        </Content>
+                    </Layout>
                 </Layout>
-            </Layout>
-        </div>
+            </div>
+        </ConfigProvider>
     );
 }
 

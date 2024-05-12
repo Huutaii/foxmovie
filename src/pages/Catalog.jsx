@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from 'react-router';
 import { Link, useNavigate } from "react-router-dom";
 import { Skeleton, Pagination } from 'antd';
@@ -24,6 +24,10 @@ function Catalog() {
     const { data, isFetching } = useGetMoviesQuery({category: category, type: !['trending', 'search'].includes(category) && 'popular', page: page, time: category === 'trending' && 'week', genreId: genreId, query: querySearch})
     const { data: genres, error: genresError, isFetching: isFetchingGenres } = useGetGenresQuery(category)
     
+    useEffect(() => {
+        setPage(1);
+    }, [category])
+
     return (
         <div className="categories">
             <div className="heading" style={{backgroundImage: `url(${headingBg})`}}>
@@ -60,9 +64,9 @@ function Catalog() {
                             </Skeleton.Node>
                         )))
                     ) : (
-                        data.results.map((item, i) => (
+                        data?.results.map((item, i) => (
                             <Link to={['trending', 'search'].includes(category) ? `/${item.media_type}/${item.id}` : `/${category}/${item.id}`} key={i} className="categories__item">
-                                <img src={`${apiConfig.originalImage(item.poster_path || item.poster_path || item.profile_path)}`} alt="" />
+                                <img src={`${apiConfig.w500Image(item.poster_path || item.poster_path || item.profile_path)}`} alt="" />
                                 <div className="categories__item--info">
                                     <p>{item.title || item.name}</p>
                                 </div>
@@ -72,16 +76,19 @@ function Catalog() {
                 }
             </div>
 
-            { !isFetching && 
+            { (!isFetching && data?.total_pages > 1) && 
                 <Pagination
                     style={{ marginTop: "32px", textAlign: "center" }}
                     defaultCurrent={page}
                     pageSize={20}
-                    total={data.total_results}
+                    total={data?.total_results}
                     showSizeChanger={false}
                     onChange={(e) => {
                         setPage(e);
-                        window.scrollTo(0,0)
+                        const element = document.querySelector('.categories__list');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
+                        }
                     }}
                 />
             }

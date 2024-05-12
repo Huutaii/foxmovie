@@ -5,11 +5,15 @@
         padding: 24px;
         display: flex;
         flex-direction: column;
+        row-gap: 48px;
         aspect-ratio: 15/5;
         background-size: cover;
         background-repeat: no-repeat;
         border-radius: 32px;
         position: relative;
+        @include max-width-1200 {
+            aspect-ratio: 16/9;
+        }
         &::before {
             content: "";
             position: absolute;
@@ -24,15 +28,44 @@
             position: relative;
             width: 50%;
             color: #FFF;
+            @include max-width-1200 {
+                width: 80%;
+            }
+            h3, p {
+                opacity: 0;
+                transform: translateY(16px);
+                transition: all 0.45s;
+            }
             h3 {
                 font-size: 34px !important;
                 line-height: 48px !important;
                 font-weight: 600 !important;
+                transition-delay: 0.25s;
                 @include line-clamp(1);
             }
             p {
+                transition-delay: 0.5s;
                 @include line-clamp;
             }
         }
+        .ant-btn {
+            opacity: 0;
+            transition: all 0.45s;
+            transition-delay: 0.75s;
+        }
     }
+}
+
+.swiper-slide-active {
+    .hero-slide__item {
+        &--info {
+            h3, p {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .ant-btn {
+            opacity: 1;
+        }
+    }   
 }

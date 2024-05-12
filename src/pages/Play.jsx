@@ -30,7 +30,7 @@ const Play = () => {
                             <VideoPlay category={category} id={id} seasons={state.seasons}/>
                             <Flex gap="large" align="flex-start" className="info__wrapper">
                                 <div className="info__wrapper--poster">
-                                    <img src={apiConfig.originalImage(state.poster_path || state.backdrop_path)} alt=""/>
+                                    <img src={apiConfig.w500Image(state.poster_path || state.backdrop_path)} alt=""/>
                                 </div>
                                 <div>
                                     <h1 className="info__wrapper--title">{state.title || state.name}</h1>
@@ -67,9 +67,9 @@ const Play = () => {
                                             dataReviews?.results.slice(0, 5).map((item, i) => (
                                                 <div key={i} className='play__wrapper--reviews__item'>
                                                     <div className="">
-                                                        <Flex wrap={true} justify="space-between" align="end" gap="large">
+                                                        <Flex wrap="wrap" justify="space-between" align="center" gap="large">
                                                             <Flex align="center" gap="small">
-                                                                <Avatar src={`${apiConfig.originalImage(item.author_details.avatar_path)}`} size="large">{!item.author_details.avatar_path && item.author_details.name}</Avatar>
+                                                                <Avatar src={`${apiConfig.w500Image(item.author_details.avatar_path)}`} size="large">{!item.author_details.avatar_path && item.author_details.name}</Avatar>
                                                                 <div className='play__wrapper--reviews__item--user'>
                                                                     <p>{item.author_details.name}</p>
                                                                     <p>@{item.author_details.username}</p>
@@ -92,7 +92,7 @@ const Play = () => {
                                         {
                                             dataRecommendations?.results.map((item, i) => (
                                                 <Link to={`/${category}/${item.id}`} key={i} className="categories__item">
-                                                    <img src={`${apiConfig.originalImage(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
+                                                    <img src={`${apiConfig.w500Image(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
                                                     <div className="categories__item--info">
                                                         <p>{item.title ? item.title : item.name}</p>
                                                     </div>

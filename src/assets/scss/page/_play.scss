@@ -1,11 +1,18 @@
 .play {
     &__wrapper {
         position: relative;
+        iframe {
+            margin-bottom: 16px;
+        }
+        button {
+            background: var(--bg-theme);
+            color: var(--border-theme);
+        }
         &--reviews {
             margin-top: 48px;
             &__list {
                 padding: 32px 24px;
-                background-color: #FFF;
+                background-color: --bg-theme;
                 border-radius: 32px;
                 box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.05);
             }

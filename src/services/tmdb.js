@@ -19,6 +19,9 @@ export const tmdbApi = createApi({
                 return `${category}/${type}?page=${page}&append_to_response=videos,credits&api_key=${apiConfig.apiKey}`
             },
         }),
+        getMoviesAccount: builder.query({
+            query: ({type, category, accountId, sessionId, page = 1}) => `account/${accountId}/${type}/${category}?page=${page}&api_key=${apiConfig.apiKey}&session_id=${sessionId}`,
+        }),
         getVideos: builder.query({
             query: ({category, id}) => `${category}/${id}/videos?api_key=${apiConfig.apiKey}`,
         }),
@@ -43,4 +46,4 @@ export const tmdbApi = createApi({
     }),
 })
 
-export const { useGetMoviesQuery, useGetVideosQuery, useGetGenresQuery, useGetDetailsQuery, useGetRecommendationsQuery, useGetReviewsQuery, useGetPersonDetailQuery, useGetMoviesByPersonIdQuery } = tmdbApi
+export const { useGetMoviesQuery, useGetMoviesAccountQuery, useGetVideosQuery, useGetGenresQuery, useGetDetailsQuery, useGetRecommendationsQuery, useGetReviewsQuery, useGetPersonDetailQuery, useGetMoviesByPersonIdQuery } = tmdbApi

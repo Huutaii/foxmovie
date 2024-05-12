@@ -12,11 +12,9 @@ import HeroSlide from "../components/HeroSlide";
 import imdbImage from '../assets/imgs/imdb.jpeg';
 
 function Home() {
-    const { data: moviePopularData, error: moviePopularError, isFetching: isFetchingMoviePopular } = useGetMoviesQuery({category: 'movie', type: 'popular'})
-    const { data: tvAiringTodayData, error: tvAiringTodayError, isFetching: isFetchingTvAiringToday } = useGetMoviesQuery({category: 'tv', type: 'airing_today'})
-    const { data: trendingData, error: trendingError, isFetching: isFetchingTrending } = useGetMoviesQuery({category: 'trending', time: 'week'})
-
-    window.scrollTo(0,0);
+    const { data: moviePopularData, isFetching: isFetchingMoviePopular } = useGetMoviesQuery({category: 'movie', type: 'popular'})
+    const { data: tvAiringTodayData, isFetching: isFetchingTvAiringToday } = useGetMoviesQuery({category: 'tv', type: 'airing_today'})
+    const { data: trendingData, isFetching: isFetchingTrending } = useGetMoviesQuery({category: 'trending', time: 'week'})
 
     return (
         <Flex vertical={true} gap="large" className="home">
@@ -36,7 +34,7 @@ function Home() {
                             !isFetchingMoviePopular && moviePopularData.results.map((item, i) => (
                                 <SwiperSlide key={i}>
                                     <Link to={`/movie/${item.id}`} style={{ color: "unset" }}>
-                                        <img className="poster" src={`${apiConfig.originalImage(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
+                                        <img className="poster" src={`${apiConfig.w500Image(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
                                         <h3>{item.original_title && item.original_title}</h3>
                                         <Flex align="center" gap="small" wrap="wrap">
                                             <img src={imdbImage} alt="" style={{ width: "16px", height: "16px" }}/>
@@ -63,7 +61,7 @@ function Home() {
                             !isFetchingTvAiringToday && tvAiringTodayData.results.map((item, i) => (
                                 <SwiperSlide key={i}>
                                     <Link to={`/tv/${item.id}`} style={{ color: "unset" }}>
-                                        <img className="poster" src={`${apiConfig.originalImage(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
+                                        <img className="poster" src={`${apiConfig.w500Image(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
                                         <h3>{item.original_name && item.original_name}</h3>
                                         <Flex align="center" gap="small" wrap="wrap">
                                             <img src={imdbImage} alt="" style={{ width: "16px", height: "16px" }}/>
@@ -91,7 +89,7 @@ function Home() {
                                 <SwiperSlide key={i}>
                                     <span>{i+1}</span>
                                     <Link to={`/${item.media_type}/${item.id}`}>
-                                        <img src={`${apiConfig.originalImage(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
+                                        <img src={`${apiConfig.w500Image(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
                                     </Link>
                                 </SwiperSlide>
                             ))

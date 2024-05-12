@@ -43,7 +43,7 @@ function Person() {
                 ) : (
                     <>
                         <Flex gap="large">
-                            <img src={apiConfig.originalImage(dataPerson?.profile_path)} className="person-poster" alt=""/>
+                            <img src={apiConfig.w500Image(dataPerson?.profile_path)} className="person-poster" alt=""/>
                             <div className="flex-1">
                                 <h1>{ dataPerson?.name }</h1>
                                 <p>{ dataPerson?.biography }</p>
@@ -55,14 +55,12 @@ function Person() {
                                 <div className="categories__list">
                                     {
                                         dataMovies?.results.map((item, i) => (
-                                            <div className="categories__list">
-                                                <Link to={`/movie/${item.id}`} key={i} className="categories__item">
-                                                    <img src={`${apiConfig.originalImage(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
-                                                    <div className="categories__item--info">
-                                                        <p>{item.title ? item.title : item.name}</p>
-                                                    </div>
-                                                </Link>
-                                            </div>
+                                            <Link to={`/movie/${item.id}`} key={i} className="categories__item">
+                                                <img src={`${apiConfig.w500Image(item.poster_path ? item.poster_path : item.backdrop_path)}`} alt="" />
+                                                <div className="categories__item--info">
+                                                    <p>{item.title ? item.title : item.name}</p>
+                                                </div>
+                                            </Link>
                                         ))
                                     }
                                 </div>
@@ -75,7 +73,10 @@ function Person() {
                                         showSizeChanger={false}
                                         onChange={(e) => {
                                             setPage(e);
-                                            window.scrollTo(0,0)
+                                            const element = document.querySelector('.categories__list');
+                                            if (element) {
+                                              element.scrollIntoView({ behavior: 'smooth' });
+                                            }
                                         }}
                                     />
                                 }
