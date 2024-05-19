@@ -3,7 +3,7 @@ import "swiper/css/navigation";
 
 import "./App.scss";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ConfigProvider, Flex, Layout, Menu, Avatar, Input, Button, Switch, Checkbox, notification } from "antd";
@@ -27,6 +27,8 @@ import apiConfig from './api/apiConfig';
 import Containers from "./config/Routes";
 import { setUser, logOut, userSelector } from "./features/authSlice";
 import { fetchToken, createSessionId, deleteSession, axiosClient } from "./utils";
+
+import { useNotification } from "./components/NotificationContext";
 
 import logo from './assets/imgs/logo.png';
 const { Header, Sider, Content } = Layout;
@@ -129,15 +131,7 @@ function App() {
         }
     })
     
-    const [api, contextHolder] = notification.useNotification();
-    const openNotification = (placement) => {
-        api.error({
-          message: 'Unauthorized Access',
-          description:
-            'Please log in to proceed.',
-          placement,
-        });
-    };
+    const { error } = useNotification();
     
     return (
         <ConfigProvider
@@ -171,7 +165,7 @@ function App() {
                 }
             }}
         >
-            {contextHolder}
+            {/* {contextHolder} */}
             <div className="container">
                 <Layout>
                     <Sider 
@@ -199,7 +193,7 @@ function App() {
                                 mode="inline"
                                 defaultSelectedKeys={[location.pathname.split('/').pop()]}
                                 items={items}
-                                onClick={({ key }) => (['favorite', 'watchlist'].includes(key) && !isAuthenticated) ? openNotification('bottomRight') : navigate(`/${key}`)}
+                                onClick={({ key }) => (['favorite', 'watchlist'].includes(key) && !isAuthenticated) ? error('Please log in to proceed') : navigate(`/${key}`)}
                             />
                             <div className="mt-auto">
                                 { isAuthenticated &&

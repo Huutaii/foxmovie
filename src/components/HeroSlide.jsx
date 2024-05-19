@@ -1,9 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper';
 import { Flex, Button, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { useGetMoviesQuery, useGetVideosQuery } from '../services/tmdb'
+import { userSelector } from "../features/authSlice";
+import { useGetMoviesQuery, useGetVideosQuery, useGetMoviesAccountQuery, useAddToWatchlistMutation } from '../services/tmdb';
+import { useNotification } from "../components/NotificationContext";
+
 import apiConfig from '../api/apiConfig';
 
 const TrailerModal = ({ id, open, close }) => {
@@ -40,9 +44,15 @@ const TrailerModal = ({ id, open, close }) => {
 }
 
 function HeroSlide() {
+    const { isAuthenticated, user } = useSelector(userSelector);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [idItem, setIdItem] = useState();
     const { data: movieUpcomingData, isFetching: isFetchingMovieUpcoming } = useGetMoviesQuery({category: 'movie', type: 'upcoming'})
+    const { data: watchlistData, } = useGetMoviesAccountQuery({type: 'watchlist', category: 'movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
+
+    const [addToWatchlist, {data} ] = useAddToWatchlistMutation();
+    console.log(data)
+    const { success, info, error } = useNotification();
 
     const closeModal = () => {
         setIsModalOpen(false);
@@ -76,7 +86,19 @@ function HeroSlide() {
                                     }}>
                                             Watch trailer
                                     </Button>
-                                    <Button ghost shape="round" icon={<PlusOutlined />} size="large">
+                                    <Button ghost shape="round" icon={<PlusOutlined />} size="large"
+                                        style={{
+                                            color: !!watchlistData?.results?.find((movie) => movie.id === item.id) ? "#F59445" : "#FFF",
+                                            borderColor: !!watchlistData?.results?.find((movie) => movie.id === item.id) ? "#F59445" : "#FFF"
+                                        }}
+                                        onClick={ async() => {
+                                            if(!isAuthenticated) {
+                                                error('Please log in to proceed');
+                                            } else {
+                                                await addToWatchlist({ user, category: 'movie', id: item.id, isWatchlisted: !!watchlistData?.results?.find((movie) => movie.id === item.id) }).unwrap();
+                                                !!watchlistData?.results?.find((movie) => movie.id === item.id) ? info('Successfully removed to watchlist') : success('Successfully added to watchlist');
+                                            }
+                                    }}>
                                         Watchlist
                                     </Button>
                                 </Flex>

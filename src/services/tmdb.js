@@ -43,7 +43,37 @@ export const tmdbApi = createApi({
         getMoviesByPersonId: builder.query({
             query: ({id, page = 1}) => `discover/movie?with_cast=${id}&page=${page}&api_key=${apiConfig.apiKey}`,
         }),
+        addFavorite: builder.mutation({
+            query: ({ user, category, id, isFavorited }) => ({
+                url: `account/${user}/favorite`,
+                method: 'POST',
+                params: {
+                    api_key: apiConfig.apiKey,
+                    session_id: localStorage.getItem('session_id')
+                },
+                body: {
+                    media_type: category,
+                    media_id: id,
+                    favorite: !isFavorited
+                }
+            })
+        }),
+        addToWatchlist: builder.mutation({
+            query: ({ user, category, id, isWatchlisted }) => ({
+                url: `account/${user}/watchlist`,
+                method: 'POST',
+                params: {
+                    api_key: apiConfig.apiKey,
+                    session_id: localStorage.getItem('session_id')
+                },
+                body: {
+                    media_type: category,
+                    media_id: id,
+                    watchlist: !isWatchlisted
+                }
+            })
+        })
     }),
 })
 
-export const { useGetMoviesQuery, useGetMoviesAccountQuery, useGetVideosQuery, useGetGenresQuery, useGetDetailsQuery, useGetRecommendationsQuery, useGetReviewsQuery, useGetPersonDetailQuery, useGetMoviesByPersonIdQuery } = tmdbApi
+export const { useGetMoviesQuery, useGetMoviesAccountQuery, useGetVideosQuery, useGetGenresQuery, useGetDetailsQuery, useGetRecommendationsQuery, useGetReviewsQuery, useGetPersonDetailQuery, useGetMoviesByPersonIdQuery, useAddFavoriteMutation, useAddToWatchlistMutation } = tmdbApi

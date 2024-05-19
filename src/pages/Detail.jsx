@@ -6,17 +6,18 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from 'swiper';
 import { Flex, Button, Avatar, Skeleton } from 'antd';
 import { PlayCircleFilled, HeartOutlined, HeartFilled, PlusOutlined, UserOutlined, CaretRightFilled } from '@ant-design/icons';
-import axios from 'axios';
 
-import { useGetMoviesAccountQuery, useGetDetailsQuery } from '../services/tmdb'
+import { useGetMoviesAccountQuery, useGetDetailsQuery, useAddFavoriteMutation, useAddToWatchlistMutation } from '../services/tmdb'
 import { userSelector } from "../features/authSlice";
+import { useNotification } from "../components/NotificationContext";
 
 import apiConfig from '../api/apiConfig';
 
 const Detail = () => {
     const { category, id } = useParams();
     const { isAuthenticated, user } = useSelector(userSelector);
-
+    const { error } = useNotification();
+    
     const { data, isFetching } = useGetDetailsQuery({category: category, id: id})
     const { data: favoriteData, } = useGetMoviesAccountQuery({type: 'favorite', category: category === 'movie' ? 'movies' : 'tv', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
     const { data: watchlistData, } = useGetMoviesAccountQuery({type: 'watchlist', category: category === 'movie' ? 'movies' : 'tv', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
@@ -31,22 +32,8 @@ const Detail = () => {
         setIsWatchlisted(!!watchlistData?.results?.find((movie) => movie.id === data?.id))
     }, [watchlistData, data])
     
-    const addFavorite = async () => {
-        await axios.post(`${apiConfig.baseUrl}account/${user}/favorite?api_key=${apiConfig.apiKey}&session_id=${localStorage.getItem('session_id')}`, {
-            media_type: category,
-            media_id: id,
-            favorite: !isFavorited
-        })
-        setIsFavorited((prev) => !prev)
-    }
-    const addToWatchlist = async () => {
-        await axios.post(`${apiConfig.baseUrl}account/${user}/watchlist?api_key=${apiConfig.apiKey}&session_id=${localStorage.getItem('session_id')}`, {
-            media_type: category,
-            media_id: id,
-            watchlist: !isWatchlisted
-        })
-        setIsWatchlisted((prev) => !prev)
-    }
+    const [addFavorite] = useAddFavoriteMutation();
+    const [addToWatchlist] = useAddToWatchlistMutation();
 
     return (
         <div className="details">
@@ -94,10 +81,26 @@ const Detail = () => {
                                     </Flex>
                                     <p className='info__wrapper--release'>Release: {data?.first_air_date || data?.release_date || data?.air_date}</p>
                                     <Flex wrap="wrap" align="center" gap="small" className="info__wrapper--btn">
-                                        <Button ghost className={isFavorited && 'active'} shape="round" icon={isFavorited ? <HeartFilled /> : <HeartOutlined />} size="large" onClick={addFavorite}>
+                                        <Button ghost className={isFavorited && 'active'} shape="round" icon={isFavorited ? <HeartFilled /> : <HeartOutlined />} size="large"
+                                            onClick={ async() => {
+                                                if(!isAuthenticated) {
+                                                    error('Please log in to proceed');
+                                                } else {
+                                                    await addFavorite({ user, category, id, isFavorited }).unwrap();
+                                                    setIsFavorited((prev) => !prev);
+                                                }
+                                        }}>
                                             Favorite
                                         </Button>
-                                        <Button ghost className={isWatchlisted && 'active'} shape="round" icon={<PlusOutlined />} size="large" onClick={addToWatchlist}>
+                                        <Button ghost className={isWatchlisted && 'active'} shape="round" icon={<PlusOutlined />} size="large"
+                                            onClick={ async() => {
+                                                if(!isAuthenticated) {
+                                                    error('Please log in to proceed');
+                                                } else {
+                                                    await addToWatchlist({ user, category, id, isWatchlisted }).unwrap();
+                                                    setIsWatchlisted((prev) => !prev);
+                                                }
+                                        }}>
                                             Watchlist
                                         </Button>
                                     </Flex>
