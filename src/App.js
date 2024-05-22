@@ -31,6 +31,7 @@ import { fetchToken, createSessionId, deleteSession, axiosClient } from "./utils
 import { useNotification } from "./components/NotificationContext";
 
 import logo from './assets/imgs/logo.png';
+import Footer from "./components/Footer";
 const { Header, Sider, Content } = Layout;
 
 function getItem(label, key, icon, children, type) {
@@ -283,6 +284,7 @@ function App() {
                     </Layout>
                 </Layout>
             </div>
+            <Footer />
         </ConfigProvider>
     );
 }

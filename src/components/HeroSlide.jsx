@@ -50,8 +50,8 @@ function HeroSlide() {
     const { data: movieUpcomingData, isFetching: isFetchingMovieUpcoming } = useGetMoviesQuery({category: 'movie', type: 'upcoming'})
     const { data: watchlistData, } = useGetMoviesAccountQuery({type: 'watchlist', category: 'movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
 
-    const [addToWatchlist, {data} ] = useAddToWatchlistMutation();
-    console.log(data)
+    const [addToWatchlist] = useAddToWatchlistMutation();
+    
     const { success, info, error } = useNotification();
 
     const closeModal = () => {
