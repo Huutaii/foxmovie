@@ -1,9 +1,25 @@
 .person {
     &-poster {
+        &__wrapper {
+            @include max-width-1200 {
+                gap: 16px;
+            }
+            @include max-width-768 {
+                flex-direction: column;
+            }
+        }
         aspect-ratio: 5/7;
-        width: 348px !important;
-        height: auto !important;
-        border-radius: 32px !important;
+        width: 100%;
+        max-width: 348px;
+        height: auto;
+        border-radius: 32px;
+        @include max-width-1400 {
+            max-width: 292px;
+            border-radius: 24px;
+        }
+        @include max-width-1200 {
+            max-width: 258px;
+        }
     }
     &-movies {
         margin-top: 48px;

@@ -42,7 +42,7 @@ function Person() {
                     </>
                 ) : (
                     <>
-                        <Flex gap="large">
+                        <Flex gap="large" align="flex-start" className="person-poster__wrapper">
                             <img src={apiConfig.w500Image(dataPerson?.profile_path)} className="person-poster" alt=""/>
                             <div className="flex-1">
                                 <h1>{ dataPerson?.name }</h1>
